@@ -4,18 +4,20 @@ import org.junit.Test;
 
 import java.util.List;
 
-public class TesteBancoJdbc {
+public class UserPosJavaTest {
 
     @Test
-    public void initBanco() {
+    public void realizarTestes() {
         //insertTest();
         obterTodosTest();
         obterPorIdTest();
+        //atualizarTest();
+        //excluirTest();
     }
 
     public void insertTest() {
         UserPosDAO userPosDAO = new UserPosDAO();
-        UserPosJava userPosJava = new UserPosJava(2L, "Pedro", "pedro@gmail.com");
+        UserPosJava userPosJava = new UserPosJava("Pedro", "pedro@gmail.com");
         userPosDAO.salvar(userPosJava);
     }
 
@@ -32,4 +34,19 @@ public class TesteBancoJdbc {
         UserPosJava userPosJava = userPosDAO.obterPorId(1L);
         System.out.println("Obter por id: " + userPosJava);
     }
+
+    public void atualizarTest() {
+        UserPosDAO userPosDAO = new UserPosDAO();
+        UserPosJava user = userPosDAO.obterPorId(2L);
+        user.setNome("Pedro Alterado");
+        user.setEmail("pedro@alterado.com");
+        userPosDAO.atualizar(user);
+    }
+
+    @Test
+    public void excluirTest() {
+        UserPosDAO userPosDAO = new UserPosDAO();
+        userPosDAO.excluir(userPosDAO.obterPorId(3L).getId());
+    }
 }
+

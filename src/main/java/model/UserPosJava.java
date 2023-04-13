@@ -9,8 +9,7 @@ public class UserPosJava {
     public UserPosJava() {
     }
 
-    public UserPosJava(Long id, String nome, String email) {
-        this.id = id;
+    public UserPosJava(String nome, String email) {
         this.nome = nome;
         this.email = email;
     }

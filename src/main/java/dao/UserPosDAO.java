@@ -44,11 +44,10 @@ public class UserPosDAO {
 
     public void salvar(UserPosJava userPosJava) {
         try {
-            String sql = "INSERT INTO userposjava (id, nome, email) VALUES (?, ?, ?)";
+            String sql = "INSERT INTO userposjava (nome, email) VALUES (?, ?)";
             PreparedStatement insert = connection.prepareStatement(sql);
-            insert.setLong(1, userPosJava.getId());
-            insert.setString(2, userPosJava.getNome());
-            insert.setString(3, userPosJava.getEmail());
+            insert.setString(1, userPosJava.getNome());
+            insert.setString(2, userPosJava.getEmail());
             insert.executeUpdate();
             connection.commit();
         } catch (Exception e) {
@@ -83,4 +82,41 @@ public class UserPosDAO {
         }
         return userPosJava;
     }
+
+    public void atualizar(UserPosJava userPosJava) {
+        try {
+            String sql = "UPDATE userposjava SET nome = ?, email = ? WHERE id = ? ";
+            PreparedStatement update = connection.prepareStatement(sql);
+            update.setString(1, userPosJava.getNome());
+            update.setString(2, userPosJava.getEmail());
+            update.setLong(3, userPosJava.getId());
+            update.executeUpdate();
+            connection.commit();
+        } catch (Exception e) {
+            e.printStackTrace();
+            try {
+                connection.rollback();
+            } catch (SQLException ex) {
+                throw new RuntimeException(ex);
+            }
+        }
+    }
+
+    public void excluir(Long id) {
+        try {
+            String sql = "DELETE FROM userposjava WHERE id = ?";
+            PreparedStatement delete = connection.prepareStatement(sql);
+            delete.setLong(1, id);
+            delete.executeUpdate();
+            connection.commit();
+        } catch (Exception e) {
+            e.printStackTrace();
+            try {
+                connection.rollback();
+            } catch (SQLException ex) {
+                throw new RuntimeException(ex);
+            }
+        }
+    }
+
 }
