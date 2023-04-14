@@ -1,6 +1,8 @@
 package dao;
 
 import conexaojdbc.SingleConnection;
+import dto.TelefoneUserDTO;
+import model.Telefone;
 import model.UserPosJava;
 
 import java.sql.Connection;
@@ -58,6 +60,55 @@ public class UserPosDAO {
                 throw new RuntimeException(ex);
             }
         }
+    }
+
+    public void salvarTelefone(Telefone telefone) {
+        try {
+            String sql = "INSERT INTO telefone_user (numero, tipo, id_user) VALUES (?, ?, ?)";
+            PreparedStatement insert = connection.prepareStatement(sql);
+            insert.setString(1, telefone.getNumero());
+            insert.setString(2, telefone.getTipo());
+            insert.setLong(3, telefone.getUsuario());
+            insert.executeUpdate();
+            connection.commit();
+        } catch (Exception e) {
+            e.printStackTrace();
+            try {
+                connection.rollback();
+            } catch (SQLException ex) {
+                throw new RuntimeException(ex);
+            }
+        }
+    }
+
+    public List<TelefoneUserDTO> obterTelefonePorPessoa(Long idUser) {
+        List<TelefoneUserDTO> telefonesDto = new ArrayList<>();
+        try {
+            StringBuilder sql = new StringBuilder();
+            sql.append("SELECT t.numero, t.tipo, u.nome");
+            sql.append(" FROM userposjava as u");
+            sql.append(" JOIN telefone_user as t");
+            sql.append(" ON u.id = t.id_user");
+            sql.append(" WHERE u.id = ? ");
+            PreparedStatement select = connection.prepareStatement(sql.toString());
+            select.setLong(1, idUser);
+            ResultSet resultado = select.executeQuery();
+            while (resultado.next()) {
+                TelefoneUserDTO telefoneUserDTO = new TelefoneUserDTO();
+                telefoneUserDTO.setNumero(resultado.getString("numero"));
+                telefoneUserDTO.setTipo(resultado.getString("tipo"));
+                telefoneUserDTO.setNome(resultado.getString("nome"));
+                telefonesDto.add(telefoneUserDTO);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            try {
+                connection.rollback();
+            } catch (SQLException ex) {
+                throw new RuntimeException(ex);
+            }
+        }
+        return telefonesDto;
     }
 
     public UserPosJava obterPorId(Long id) {

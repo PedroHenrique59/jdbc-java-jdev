@@ -1,7 +1,10 @@
 import dao.UserPosDAO;
+import dto.TelefoneUserDTO;
+import model.Telefone;
 import model.UserPosJava;
 import org.junit.Test;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class UserPosJavaTest {
@@ -13,6 +16,8 @@ public class UserPosJavaTest {
         obterPorIdTest();
         //atualizarTest();
         //excluirTest();
+        //insertTelefoneTest();
+        obterTelefonePorPessoaTest();
     }
 
     public void insertTest() {
@@ -43,10 +48,23 @@ public class UserPosJavaTest {
         userPosDAO.atualizar(user);
     }
 
-    @Test
     public void excluirTest() {
         UserPosDAO userPosDAO = new UserPosDAO();
         userPosDAO.excluir(userPosDAO.obterPorId(3L).getId());
+    }
+
+    public void insertTelefoneTest() {
+        UserPosDAO userPosDAO = new UserPosDAO();
+        Telefone telefone = new Telefone("31 9999999", "Celular", 1L);
+        userPosDAO.salvarTelefone(telefone);
+    }
+
+    public void obterTelefonePorPessoaTest() {
+        UserPosDAO userPosDAO = new UserPosDAO();
+        List<TelefoneUserDTO> telefoneUserDtos = new ArrayList<>(userPosDAO.obterTelefonePorPessoa(userPosDAO.obterPorId(1L).getId()));
+        for (TelefoneUserDTO dto : telefoneUserDtos) {
+            System.out.println(dto);
+        }
     }
 }
 
